@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>手速反应测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"PingFang SC",sans-serif;}
+body{
+  width:100vw;height:100vh;
+  background:linear-gradient(135deg,#141e30,#243b55);
+  overflow:hidden;
+  color:#fff;
+  position:relative;
+}
+/* 顶部信息栏 */
+.top-bar{
+  position:fixed;top:15px;left:50%;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(8px);
+  padding:8px 20px;
+  border-radius:30px;
+  font-size:16px;
+  z-index:10;
+}
+/* 红点 */
+.dot{
+  width:55px;height:55px;
+  background:radial-gradient(circle,#ff4444,#dd0000);
+  border-radius:50%;
+  position:absolute;
+  display:none;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 20px #ff2222;
+}
+/* 开始按钮 */
+#startBtn{
+  position:fixed;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  padding:16px 40px;
+  font-size:20px;
+  border:none;border-radius:50px;
+  background:linear-gradient(90deg,#00c6ff,#0072ff);
+  color:#fff;
+  z-index:20;
+}
+#startBtn.hide{display:none;}
+/* 结果面板 */
+.result-box{
+  position:fixed;bottom:20px;left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(6px);
+  padding:15px 25px;
+  border-radius:16px;
+  text-align:center;
+  line-height:1.8;
+  min-width:280px;
+}
+/* 排行榜 */
+.rank-box{
+  position:fixed;top:70px;right:15px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(6px);
+  padding:10px;
+  border-radius:12px;
+  font-size:13px;
+  min-width:120px;
+}
+.rank-title{font-weight:bold;margin-bottom:6px;color:#ffd700;}
+/* 提示文字 */
+.tip{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:18px;color:#ccc;}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  第 <span id="curRound">1</span> / 5 次
+</div>
+
+<div class="rank-box">
+  <div class="rank-title">🏆 最佳排行</div>
+  <div id="rankList">暂无记录</div>
+</div>
+
+<div class="tip" id="tipText">点击下方按钮开始测试</div>
+<div class="dot" id="redDot"></div>
+
+<div class="result-box" id="resultBox">
+  准备就绪
+</div>
+
+<button id="startBtn">开始手速测试</button>
+
+<script>
+const redDot = document.getElementById('redDot');
+const startBtn = document.getElementById('startBtn');
+const curRoundEl = document.getElementById('curRound');
+const resultBox = document.getElementById('resultBox');
+const tipText = document.getElementById('tipText');
+const rankList = document.getElementById('rankList');
+
+let timesArr = [];
+let currentRound = 1;
+let startTime = 0;
+let bestList = JSON.parse(localStorage.getItem('speedRank')) || [];
+
+// 渲染排行榜
+function renderRank(){
+  if(bestList.length === 0){
+    rankList.innerHTML = '暂无记录';
+    return;
+  }
+  let html = '';
+  bestList.slice(0,5).forEach((item,idx)=>{
+    html += `第${idx+1}名：${item}ms<br>`;
+  });
+  rankList.innerHTML = html;
+}
+renderRank();
+
+// 开始测试
+startBtn.onclick = function(){
+  startBtn.classList.add('hide');
+  tipText.style.display = 'none';
+  timesArr = [];
+  currentRound = 1;
+  nextRound();
+};
+
+// 下一轮
+function nextRound(){
+  if(currentRound > 5){
+    finishTest();
+    return;
+  }
+  curRoundEl.innerText = currentRound;
+  resultBox.innerHTML = `等待红点出现...`;
+  // 随机延迟 0.6~2秒
+  let delay = Math.random() * 1400 + 600;
+  setTimeout(showRandomDot, delay);
+}
+
+// 随机位置显示红点
+function showRandomDot(){
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  // 安全边距
+  let x = Math.random() * (w - 120) + 60;
+  let y = Math.random() * (h - 220) + 110;
+  
+  redDot.style.left = x + 'px';
+  redDot.style.top = y + 'px';
+  redDot.style.display = 'block';
+  
+  startTime = performance.now();
+}
+
+// 点击红点
+redDot.onclick = function(){
+  redDot.style.display = 'none';
+  let cost = Math.round(performance.now() - startTime);
+  timesArr.push(cost);
+  
+  resultBox.innerHTML = `第${currentRound}次：${cost} 毫秒`;
+  currentRound++;
+  setTimeout(nextRound, 700);
+};
+
+// 结束测试 算平均 + 保存排行
+function finishTest(){
+  let sum = timesArr.reduce((a,b)=>a+b,0);
+  let avg = Math.round(sum / 5);
+
+  resultBox.innerHTML = `
+  🎯 测试完成<br>
+  成绩：${timesArr.join('ms / ')}ms<br>
+  平均反应：<strong style="color:#ffd700;font-size:22px">${avg} ms</strong>
+  `;
+
+  // 保存到排行榜
+  bestList.push(avg);
+  // 从小到大排序，反应越快越靠前
+  bestList.sort((a,b)=>a-b);
+  // 只保留前10条
+  bestList = bestList.slice(0,10);
+  localStorage.setItem('speedRank', JSON.stringify(bestList));
+  renderRank();
+
+  // 重新开始
+  setTimeout(()=>{
+    if(confirm('测试完成！是否再来一局？')){
+      startBtn.classList.remove('hide');
+      tipText.style.display = 'block';
+      tipText.innerText = '点击按钮重新开始';
+    }else{
+      startBtn.classList.remove('hide');
+      tipText.style.display = 'block';
+      tipText.innerText = '可随时重新开始';
+    }
+  },1200);
+}
+</script>
+</body>
+</html>
