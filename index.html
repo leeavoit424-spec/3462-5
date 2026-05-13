@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetcinPro - Premium Financial Information Consulting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F4C81',
+                        secondary: '#D4AF37',
+                        accent: '#2E8B57',
+                        dark: '#1A1A2E',
+                        light: '#F8F9FA',
+                        neutral: '#6B7280'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            }
+            .scroll-smooth {
+                scroll-behavior: smooth;
+            }
+            .stats-card {
+                background: linear-gradient(135deg, rgba(15,76,129,0.05) 0%, rgba(46,139,87,0.05) 100%);
+                border: 1px solid rgba(15,76,129,0.1);
+            }
+            .testimonial-card {
+                background: white;
+                border-left: 4px solid #0F4C81;
+            }
+        }
+    </style>
+	<script>
+    // 修复移动端菜单点击问题
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        // 菜单按钮点击切换显示/隐藏
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止事件冒泡
+            mobileMenu.classList.toggle('hidden');
+            // 切换菜单图标（汉堡/关闭）
+            const icon = menuBtn.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
+        });
+        
+        // 点击移动端导航链接后关闭菜单（优化体验）
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+                // 恢复汉堡图标
+                const icon = menuBtn.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+        
+        // 点击页面其他区域关闭移动端菜单
+        document.addEventListener('click', function(e) {
+            if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+                const icon = menuBtn.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // 修复锚点跳转时的导航栏遮挡问题（可选，优化体验）
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // 计算滚动位置（避开固定导航栏）
+                    const navbarHeight = document.getElementById('navbar').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    });
+</script>
+</head>
+<body class="font-inter text-dark bg-light scroll-smooth">
+    <!-- Navigation Bar -->
+    <header id="navbar" class="fixed w-full top-0 z-50 bg-white/95 shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-4 md:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center">
+                    <span class="text-primary text-2xl font-bold">Getcin<span class="text-secondary">Pro</span></span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-dark hover:text-primary font-medium transition-colors">Home</a>
+                    <a href="#about" class="text-dark hover:text-primary font-medium transition-colors">About Us</a>
+                    <a href="#services" class="text-dark hover:text-primary font-medium transition-colors">Services</a>
+                    <a href="#expertise" class="text-dark hover:text-primary font-medium transition-colors">Expertise</a>
+                    <a href="#testimonials" class="text-dark hover:text-primary font-medium transition-colors">Testimonials</a>
+                    <a href="#faq" class="text-dark hover:text-primary font-medium transition-colors">FAQ</a>
+                    <a href="#contact" class="text-dark hover:text-primary font-medium transition-colors">Contact</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="menuBtn" class="md:hidden text-dark text-xl">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#home" class="py-2 text-dark hover:text-primary font-medium">Home</a>
+                <a href="#about" class="py-2 text-dark hover:text-primary font-medium">About Us</a>
+                <a href="#services" class="py-2 text-dark hover:text-primary font-medium">Services</a>
+                <a href="#expertise" class="py-2 text-dark hover:text-primary font-medium">Expertise</a>
+                <a href="#testimonials" class="py-2 text-dark hover:text-primary font-medium">Testimonials</a>
+                <a href="#faq" class="py-2 text-dark hover:text-primary font-medium">FAQ</a>
+                <a href="#contact" class="py-2 text-dark hover:text-primary font-medium">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="pt-24 md:pt-32 pb-16 md:pb-24 bg-gradient-to-br from-primary/5 to-accent/5">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8">
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div class="order-2 md:order-1">
+                        <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight text-dark mb-4">
+                            Strategic Financial <span class="text-primary">Consulting</span> for Global Success
+                        </h1>
+                        <p class="text-lg text-neutral mb-8 max-w-lg">
+                            With over 25 years of combined industry experience, our team of certified financial analysts and consultants delivers tailored solutions that drive measurable results for businesses of all sizes – from startups to Fortune 500 corporations.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#services" class="px-6 py-3 bg-primary text-white rounded-md font-medium hover:bg-primary/90 transition-colors">
+                                Our Services
+                            </a>
+                            <a href="#contact" class="px-6 py-3 bg-white text-primary border border-primary rounded-md font-medium hover:bg-primary/5 transition-colors">
+                                Get in Touch
+                            </a>
+                        </div>
+                        
+                        <!-- Stats Highlights -->
+                        <div class="grid grid-cols-3 gap-4 mt-10">
+                            <div class="stats-card rounded-lg p-4 text-center">
+                                <p class="text-2xl font-bold text-primary">98%</p>
+                                <p class="text-sm text-neutral">Client Satisfaction</p>
+                            </div>
+                            <div class="stats-card rounded-lg p-4 text-center">
+                                <p class="text-2xl font-bold text-secondary">500+</p>
+                                <p class="text-sm text-neutral">Global Clients</p>
+                            </div>
+                            <div class="stats-card rounded-lg p-4 text-center">
+                                <p class="text-2xl font-bold text-accent">25+</p>
+                                <p class="text-sm text-neutral">Years Experience</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2 rounded-xl overflow-hidden shadow-xl">
+                        <img src="https://drive.google.com/file/d/1yn_q_bQ6W7OROSf-AVuGZDvDw0TGj4as/view?usp=drive_link" alt="Financial Consulting" class="w-full h-auto object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">About GetcinPro</h2>
+                    <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                    <p class="text-neutral max-w-2xl mx-auto">Leading financial information consulting firm delivering expert guidance and strategic insights worldwide.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="rounded-xl overflow-hidden shadow-lg">
+                        <img src="https://drive.google.com/file/d/1yn_q_bQ6W7OROSf-AVuGZDvDw0TGj4as/view?usp=drive_link" alt="About GetcinPro" class="w-full h-auto">
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-4 text-primary">Our Story</h3>
+                        <p class="text-neutral mb-4">
+                            Founded in 1998 in the heart of Cambridge's financial district, GetcinPro began with a simple mission: to provide transparent, data-driven financial advice that empowers businesses to achieve their full potential. What started as a small team of three financial experts has grown into a global consulting firm with clients across 32 countries.
+                        </p>
+                        <p class="text-neutral mb-6">
+                            Our approach combines cutting-edge financial technology with decades of hands-on industry experience. We don't just provide reports – we partner with our clients to implement actionable strategies that drive growth, mitigate risk, and optimize financial performance across all business functions.
+                        </p>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-accent mt-1 mr-3"></i>
+                                <span>Advanced financial modeling and predictive analytics using AI-powered tools</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-accent mt-1 mr-3"></i>
+                                <span>Customized consulting strategies aligned with your business objectives and market conditions</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa fa-check-circle text-accent mt-1 mr-3"></i>
+                                <span>Local market expertise with global perspective, ensuring compliance and cultural sensitivity</span>
+                            </li>
+                        </ul>
+                        
+                        <!-- Leadership Highlight -->
+                        <div class="bg-primary/5 p-4 rounded-lg border-l-4 border-primary">
+                            <p class="italic text-neutral">"Our success is measured by the success of our clients. We take pride in building long-term relationships based on trust, integrity, and measurable results."</p>
+                            <p class="font-medium mt-2">James Richardson, CEO & Founder</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Team Section -->
+                <div class="mt-20">
+                    <h3 class="text-2xl font-semibold mb-8 text-center">Our Leadership Team</h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Team Member 1 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                            <div class="w-24 h-24 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
+                                <i class="fa fa-user text-3xl text-primary"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg">James Richardson</h4>
+                            <p class="text-secondary text-sm mb-2">CEO & Founder</p>
+                            <p class="text-neutral text-sm">25+ years in international finance, former CFO at a Fortune 500 company</p>
+                        </div>
+                        
+                        <!-- Team Member 2 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                            <div class="w-24 h-24 rounded-full bg-secondary/10 mx-auto mb-4 flex items-center justify-center">
+                                <i class="fa fa-user text-3xl text-secondary"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg">Sarah Johnson</h4>
+                            <p class="text-secondary text-sm mb-2">Chief Financial Analyst</p>
+                            <p class="text-neutral text-sm">Specializes in global market trends and investment strategy development</p>
+                        </div>
+                        
+                        <!-- Team Member 3 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                            <div class="w-24 h-24 rounded-full bg-accent/10 mx-auto mb-4 flex items-center justify-center">
+                                <i class="fa fa-user text-3xl text-accent"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg">Michael Chen</h4>
+                            <p class="text-secondary text-sm mb-2">Risk Management Director</p>
+                            <p class="text-neutral text-sm">Expert in financial risk assessment and mitigation strategies</p>
+                        </div>
+                        
+                        <!-- Team Member 4 -->
+                        <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                            <div class="w-24 h-24 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
+                                <i class="fa fa-user text-3xl text-primary"></i>
+                            </div>
+                            <h4 class="font-semibold text-lg">Emma Wilson</h4>
+                            <p class="text-secondary text-sm mb-2">Client Success Director</p>
+                            <p class="text-neutral text-sm">Focused on delivering exceptional client experiences and measurable outcomes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-16 md:py-24 bg-primary/5">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
+                    <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                    <p class="text-neutral max-w-2xl mx-auto">Comprehensive financial consulting services designed to help you make informed decisions and achieve sustainable growth.</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="bg-white rounded-xl p-8 shadow-md card-hover">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-line-chart text-2xl text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Financial Analysis</h3>
+                        <p class="text-neutral mb-4">Our financial analysis service provides deep insights into your company's financial health, including:</p>
+                        <ul class="text-neutral text-sm space-y-2 mb-4">
+                            <li>• Profitability and liquidity analysis</li>
+                            <li>• Cash flow forecasting and optimization</li>
+                            <li>• Financial ratio benchmarking</li>
+                            <li>• Trend analysis and growth projections</li>
+                        </ul>
+                        <a href="#contact" class="text-primary font-medium hover:underline">Learn more →</a>
+                    </div>
+
+                    <!-- Service Card 2 -->
+                    <div class="bg-white rounded-xl p-8 shadow-md card-hover">
+                        <div class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-briefcase text-2xl text-secondary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Business Consulting</h3>
+                        <p class="text-neutral mb-4">We help optimize your business operations with strategic consulting:</p>
+                        <ul class="text-neutral text-sm space-y-2 mb-4">
+                            <li>• Business plan development and review</li>
+                            <li>• Operational efficiency assessment</li>
+                            <li>• Cost reduction strategies</li>
+                            <li>• Mergers and acquisitions advisory</li>
+                        </ul>
+                        <a href="#contact" class="text-primary font-medium hover:underline">Learn more →</a>
+                    </div>
+
+                    <!-- Service Card 3 -->
+                    <div class="bg-white rounded-xl p-8 shadow-md card-hover">
+                        <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-globe text-2xl text-accent"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Global Market Insights</h3>
+                        <p class="text-neutral mb-4">Navigate international markets with confidence:</p>
+                        <ul class="text-neutral text-sm space-y-2 mb-4">
+                            <li>• Regional market entry strategies</li>
+                            <li>• Currency risk management</li>
+                            <li>• Regulatory compliance guidance</li>
+                            <li>• Competitive landscape analysis</li>
+                        </ul>
+                        <a href="#contact" class="text-primary font-medium hover:underline">Learn more →</a>
+                    </div>
+
+                    <!-- Service Card 4 -->
+                    <div class="bg-white rounded-xl p-8 shadow-md card-hover">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-money text-2xl text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Investment Guidance</h3>
+                        <p class="text-neutral mb-4">Build a robust investment portfolio with expert guidance:</p>
+                        <ul class="text-neutral text-sm space-y-2 mb-4">
+                            <li>• Asset allocation strategies</li>
+                            <li>• Diversification planning</li>
+                            <li>• Investment performance analysis</li>
+                            <li>• Retirement and wealth management</li>
+                        </ul>
+                        <a href="#contact" class="text-primary font-medium hover:underline">Learn more →</a>
+                    </div>
+
+                    <!-- Service Card 5 -->
+                    <div class="bg-white rounded-xl p-8 shadow-md card-hover">
+                        <div class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-shield text-2xl text-secondary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Risk Management</h3>
+                        <p class="text-neutral mb-4">Protect your assets with comprehensive risk management:</p>
+                        <ul class="text-neutral text-sm space-y-2 mb-4">
+                            <li>• Financial risk assessment</li>
+                            <li>• Hedging strategy implementation</li>
+                            <li>• Insurance and contingency planning</li>
+                            <li>• Compliance and regulatory risk mitigation</li>
+                        </ul>
+                        <a href="#contact" class="text-primary font-medium hover:underline">Learn more →</a>
+                    </div>
+
+                    <!-- Service Card 6 -->
+                    <div class="bg-white rounded-xl p-8 shadow-md card-hover">
+                        <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-users text-2xl text-accent"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Personal Consulting</h3>
+                        <p class="text-neutral mb-4">Personalized financial guidance for individual success:</p>
+                        <ul class="text-neutral text-sm space-y-2 mb-4">
+                            <li>• Personal financial planning</li>
+                            <li>• Tax optimization strategies</li>
+                            <li>• Estate and succession planning</li>
+                            <li>• Executive compensation consulting</li>
+                        </ul>
+                        <a href="#contact" class="text-primary font-medium hover:underline">Learn more →</a>
+                    </div>
+                </div>
+                
+                <!-- Service Process -->
+                <div class="mt-20 bg-white rounded-xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-semibold mb-8 text-center">Our Consulting Process</h3>
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center mx-auto mb-4 text-2xl">
+                                01
+                            </div>
+                            <h4 class="font-semibold mb-2">Discovery</h4>
+                            <p class="text-neutral text-sm">We conduct a thorough analysis of your current financial situation and business goals.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-secondary text-white flex items-center justify-center mx-auto mb-4 text-2xl">
+                                02
+                            </div>
+                            <h4 class="font-semibold mb-2">Analysis</h4>
+                            <p class="text-neutral text-sm">Our experts analyze market conditions, risks, and opportunities specific to your industry.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-accent text-white flex items-center justify-center mx-auto mb-4 text-2xl">
+                                03
+                            </div>
+                            <h4 class="font-semibold mb-2">Strategy</h4>
+                            <p class="text-neutral text-sm">We develop customized financial strategies aligned with your business objectives.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center mx-auto mb-4 text-2xl">
+                                04
+                            </div>
+                            <h4 class="font-semibold mb-2">Implementation</h4>
+                            <p class="text-neutral text-sm">We support you in executing the strategy with ongoing monitoring and adjustments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expertise Section -->
+        <section id="expertise" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Expertise</h2>
+                    <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                    <p class="text-neutral max-w-2xl mx-auto">Industry-leading expertise across all financial consulting domains, backed by continuous research and market analysis.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-16">
+                    <div>
+                        <img src="https://drive.google.com/file/d/1yn_q_bQ6W7OROSf-AVuGZDvDw0TGj4as/view?usp=drive_link" alt="Financial Expertise" class="rounded-xl shadow-lg w-full h-auto">
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flex items-center">
+                                <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">01</span>
+                                Market Analysis
+                            </h3>
+                            <p class="text-neutral text-sm mb-2">Leveraging big data and AI to provide real-time market insights and predictive analytics</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flex items-center">
+                                <span class="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center mr-3">02</span>
+                                Financial Planning
+                            </h3>
+                            <p class="text-neutral text-sm mb-2">Comprehensive financial planning for short and long-term business objectives</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-secondary h-2.5 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flex items-center">
+                                <span class="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center mr-3">03</span>
+                                Investment Strategy
+                            </h3>
+                            <p class="text-neutral text-sm mb-2">Data-driven investment strategies tailored to risk tolerance and return objectives</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-accent h-2.5 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flex items-center">
+                                <span class="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center mr-3">04</span>
+                                Risk Assessment
+                            </h3>
+                            <p class="text-neutral text-sm mb-2">Holistic risk assessment covering market, credit, operational, and compliance risks</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-primary h-2.5 rounded-full" style="width: 94%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flex items-center">
+                                <span class="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center mr-3">05</span>
+                                Business Consulting
+                            </h3>
+                            <p class="text-neutral text-sm mb-2">Strategic business consulting for operational efficiency and profitability</p>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-secondary h-2.5 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Industry Specialization -->
+                <div class="mt-20">
+                    <h3 class="text-2xl font-semibold mb-8 text-center">Industry Specialization</h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-primary/5 rounded-lg p-6 border border-primary/10">
+                            <i class="fa fa-building text-2xl text-primary mb-3"></i>
+                            <h4 class="font-semibold mb-2">Corporate Finance</h4>
+                            <p class="text-neutral text-sm">Specialized financial consulting for corporations across all sectors, including capital structure optimization, financial restructuring, and strategic financial planning.</p>
+                        </div>
+                        <div class="bg-secondary/5 rounded-lg p-6 border border-secondary/10">
+                            <i class="fa fa-bank text-2xl text-secondary mb-3"></i>
+                            <h4 class="font-semibold mb-2">Banking & Financial Services</h4>
+                            <p class="text-neutral text-sm">Expert guidance for financial institutions on regulatory compliance, risk management, and operational efficiency in an evolving regulatory landscape.</p>
+                        </div>
+                        <div class="bg-accent/5 rounded-lg p-6 border border-accent/10">
+                            <i class="fa fa-industry text-2xl text-accent mb-3"></i>
+                            <h4 class="font-semibold mb-2">Manufacturing & Retail</h4>
+                            <p class="text-neutral text-sm">Financial strategies tailored to the unique challenges of manufacturing and retail businesses, including supply chain finance and inventory optimization.</p>
+                        </div>
+                        <div class="bg-primary/5 rounded-lg p-6 border border-primary/10">
+                            <i class="fa fa-globe text-2xl text-primary mb-3"></i>
+                            <h4 class="font-semibold mb-2">International Business</h4>
+                            <p class="text-neutral text-sm">Cross-border financial consulting including foreign exchange management, international tax planning, and global market entry strategies.</p>
+                        </div>
+                        <div class="bg-secondary/5 rounded-lg p-6 border border-secondary/10">
+                            <i class="fa fa-startup text-2xl text-secondary mb-3"></i>
+                            <h4 class="font-semibold mb-2">Startups & SMEs</h4>
+                            <p class="text-neutral text-sm">Scalable financial solutions for startups and small to medium enterprises, including funding strategy, financial modeling, and growth planning.</p>
+                        </div>
+                        <div class="bg-accent/5 rounded-lg p-6 border border-accent/10">
+                            <i class="fa fa-user text-2xl text-accent mb-3"></i>
+                            <h4 class="font-semibold mb-2">High-Net-Worth Individuals</h4>
+                            <p class="text-neutral text-sm">Personalized wealth management and financial planning for high-net-worth individuals and families.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-16 md:py-24 bg-primary/5">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Client Testimonials</h2>
+                    <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                    <p class="text-neutral max-w-2xl mx-auto">Hear what our clients have to say about our financial consulting services.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-card rounded-lg p-6 shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="text-yellow-400 flex">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-neutral italic mb-6">"GetcinPro transformed our financial strategy and helped us identify growth opportunities we had overlooked. Their team's expertise and personalized approach have been instrumental in our 30% revenue growth over the past year."</p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                <i class="fa fa-user text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">David Thompson</h4>
+                                <p class="text-sm text-neutral">CEO, Global Tech Solutions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-card rounded-lg p-6 shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="text-yellow-400 flex">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                        </div>
+                        <p class="text-neutral italic mb-6">"The risk management strategies implemented by GetcinPro protected our business during market volatility. Their proactive approach and deep market knowledge give us confidence in our financial decisions."</p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mr-4">
+                                <i class="fa fa-user text-secondary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Jennifer Lee</h4>
+                                <p class="text-sm text-neutral">CFO, Atlantic Trading Co.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-card rounded-lg p-6 shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="text-yellow-400 flex">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                            </div>
+                        </div>
+                        <p class="text-neutral italic mb-6">"As a startup, we needed clear financial guidance to secure funding and scale our operations. GetcinPro's team provided invaluable insights that helped us secure $2.5M in venture capital and develop a sustainable growth plan."</p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mr-4">
+                                <i class="fa fa-user text-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Marcus Rodriguez</h4>
+                                <p class="text-sm text-neutral">Founder, GreenTech Innovations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Case Studies -->
+                <div class="mt-20">
+                    <h3 class="text-2xl font-semibold mb-8 text-center">Success Stories & Case Studies</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                            <div class="h-48 bg-primary/10 flex items-center justify-center">
+                                <i class="fa fa-line-chart text-5xl text-primary"></i>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="font-semibold text-xl mb-2">Manufacturing Company Turnaround</h4>
+                                <p class="text-neutral mb-4">How we helped a struggling manufacturing company reduce costs by 22% and improve profitability through strategic financial restructuring and operational efficiency improvements.</p>
+                                <a href="#contact" class="text-primary font-medium hover:underline">Read Full Case Study →</a>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl overflow-hidden shadow-lg">
+                            <div class="h-48 bg-secondary/10 flex items-center justify-center">
+                                <i class="fa fa-globe text-5xl text-secondary"></i>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="font-semibold text-xl mb-2">Global Market Expansion</h4>
+                                <p class="text-neutral mb-4">Our strategic guidance helped a mid-sized retail company successfully expand into 5 new international markets while mitigating currency risks and ensuring regulatory compliance.</p>
+                                <a href="#contact" class="text-primary font-medium hover:underline">Read Full Case Study →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+                    <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                    <p class="text-neutral max-w-2xl mx-auto">Answers to the most common questions about our financial consulting services.</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto">
+                    <div class="space-y-6">
+                        <!-- FAQ Item 1 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <button class="faq-toggle w-full flex items-center justify-between p-4 text-left bg-primary/5 hover:bg-primary/10 transition-colors">
+                                <span class="font-semibold">What makes GetcinPro different from other financial consulting firms?</span>
+                                <i class="fa fa-plus text-primary transition-transform"></i>
+                            </button>
+                            <div class="faq-content hidden p-4 bg-white">
+                                <p class="text-neutral">GetcinPro combines deep industry expertise with a personalized approach to financial consulting. Unlike many firms that offer generic solutions, we take the time to understand your unique business challenges and goals, developing customized strategies that deliver measurable results. Our team includes former CFOs, investment bankers, and financial analysts with real-world experience across diverse industries, ensuring practical, actionable advice rather than theoretical recommendations.</p>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 2 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <button class="faq-toggle w-full flex items-center justify-between p-4 text-left bg-primary/5 hover:bg-primary/10 transition-colors">
+                                <span class="font-semibold">What types of clients do you work with?</span>
+                                <i class="fa fa-plus text-primary transition-transform"></i>
+                            </button>
+                            <div class="faq-content hidden p-4 bg-white">
+                                <p class="text-neutral">We work with a diverse range of clients including startups, small and medium enterprises (SMEs), large corporations, financial institutions, and high-net-worth individuals. Our services are scalable and tailored to meet the specific needs of each client, whether you're a startup seeking funding strategy advice or a multinational corporation needing global market analysis and risk management solutions.</p>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 3 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <button class="faq-toggle w-full flex items-center justify-between p-4 text-left bg-primary/5 hover:bg-primary/10 transition-colors">
+                                <span class="font-semibold">How much do your consulting services cost?</span>
+                                <i class="fa fa-plus text-primary transition-transform"></i>
+                            </button>
+                            <div class="faq-content hidden p-4 bg-white">
+                                <p class="text-neutral">Our pricing structure is transparent and tailored to the scope and complexity of each engagement. We offer flexible pricing models including project-based fees, retainer arrangements, and hourly consulting rates. During our initial consultation, we provide a detailed proposal outlining the scope of work and associated costs with no hidden fees. We believe in aligning our success with yours, and often include performance-based incentives in our larger engagements.</p>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 4 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <button class="faq-toggle w-full flex items-center justify-between p-4 text-left bg-primary/5 hover:bg-primary/10 transition-colors">
+                                <span class="font-semibold">How long does a typical consulting engagement last?</span>
+                                <i class="fa fa-plus text-primary transition-transform"></i>
+                            </button>
+                            <div class="faq-content hidden p-4 bg-white">
+                                <p class="text-neutral">The duration of our engagements varies based on your specific needs. Some projects such as financial analysis or market assessments can be completed in 2-4 weeks, while more comprehensive engagements like business turnaround or strategic financial planning may last 3-12 months. We also offer ongoing advisory services for clients who benefit from continuous financial guidance and market monitoring. Our goal is to deliver value efficiently while ensuring thorough analysis and implementation support.</p>
+                            </div>
+                        </div>
+
+                        <!-- FAQ Item 5 -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <button class="faq-toggle w-full flex items-center justify-between p-4 text-left bg-primary/5 hover:bg-primary/10 transition-colors">
+                                <span class="font-semibold">Do you offer remote consulting services?</span>
+                                <i class="fa fa-plus text-primary transition-transform"></i>
+                            </button>
+                            <div class="faq-content hidden p-4 bg-white">
+                                <p class="text-neutral">Yes, we provide comprehensive remote consulting services to clients worldwide. Our digital collaboration tools and secure data sharing platforms allow us to deliver the same high-quality consulting services remotely as we do in person. We combine virtual meetings with secure document sharing and real-time collaboration to ensure effective communication throughout the engagement. For clients who prefer in-person interactions, we also offer on-site consulting at your location.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-10 text-center">
+                        <p class="text-neutral mb-4">Have more questions? We're here to help.</p>
+                        <a href="#contact" class="inline-block px-6 py-3 bg-primary text-white rounded-md font-medium hover:bg-primary/90 transition-colors">
+                            Contact Our Experts
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 md:py-24 bg-primary/5">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Contact Us</h2>
+                    <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                    <p class="text-neutral max-w-2xl mx-auto">Get in touch with our financial consulting experts to discuss how we can help your business achieve its financial goals.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-2xl font-semibold mb-6 text-primary">Send Us a Message</h3>
+                        <form id="contactForm" class="space-y-5">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-neutral mb-1">Full Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="John Doe" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-neutral mb-1">Email Address</label>
+                                <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="john@example.com" required>
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-neutral mb-1">Phone Number (Optional)</label>
+                                <input type="tel" id="phone" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="+44 123 4567890">
+                            </div>
+                            <div>
+                                <label for="service" class="block text-sm font-medium text-neutral mb-1">Service Interested In</label>
+                                <select id="service" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+                                    <option value="">Select a service</option>
+                                    <option value="financial-analysis">Financial Analysis</option>
+                                    <option value="business-consulting">Business Consulting</option>
+                                    <option value="market-insights">Global Market Insights</option>
+                                    <option value="investment-guidance">Investment Guidance</option>
+                                    <option value="risk-management">Risk Management</option>
+                                    <option value="personal-consulting">Personal Consulting</option>
+                                    <option value="other">Other Services
